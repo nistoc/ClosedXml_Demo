@@ -1,7 +1,10 @@
 ﻿using DemoApp.Models;
 using DemoApp.Services;
 using Microsoft.AspNetCore.Mvc;
+using Models.Core;
+using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Linq;
 
 namespace DemoApp.Controllers
 {
@@ -21,7 +24,7 @@ namespace DemoApp.Controllers
         public IActionResult Excel()
         {
             var fileData = _xLWorkbookProvider.GetFile("Demo01.xlsx");
-            return View();
+            return Content(JsonConvert.SerializeObject(fileData.FileRowList));
         }
 
         public IActionResult Privacy()

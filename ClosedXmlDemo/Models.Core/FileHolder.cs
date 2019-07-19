@@ -9,10 +9,10 @@
             CurrentFile = file;
         }
 
-        public string FileName { get; }
         public T CurrentFile { get; }
+        public string FileName { get; }
 
-
+        public FileRowList FileRowList { get; } = new FileRowList();
 
     }
 }

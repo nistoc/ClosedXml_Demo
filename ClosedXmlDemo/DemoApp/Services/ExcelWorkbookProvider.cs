@@ -3,6 +3,7 @@ using ClosedXML.Excel;
 using System;
 using Microsoft.AspNetCore.Hosting;
 using Models.Core;
+using System.Linq;
 
 namespace DemoApp.Services
 {
@@ -17,14 +18,26 @@ namespace DemoApp.Services
         public IFileHolder<XLWorkbook> GetFile(string fileName)
         {
             // получаем сохраненный файл
-            string xsltPath = Path.Combine(_hostingEnvironment.WebRootPath + @"~/wwwroot" + fileName);
+            string xsltPath = Path.Combine(_hostingEnvironment.WebRootPath, "excel", fileName);
             // начало использования библиотеке ClosedXML
             var workbook = new XLWorkbook(xsltPath);
             var worksheet = workbook.Worksheet(1);
 
             var model = new FileHolder<XLWorkbook>(fileName, workbook);
 
+            var capacity = worksheet.FirstColumnUsed().LastCellUsed().Address.RowNumber;
+            capacity--;
+            foreach (var column in worksheet.ColumnsUsed())
+            {
+                var rowItem = new RowItem(capacity);
 
+                foreach (var usedCell in column.CellsUsed().Where(c => c.Address.RowNumber > 1))
+                {
+                    rowItem.SetValue(usedCell.Address.RowNumber - 2, usedCell.Value.ToString());
+                }
+
+                model.FileRowList.AddRow(rowItem);
+            }
 
             return model;
         }
