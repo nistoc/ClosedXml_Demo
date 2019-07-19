@@ -24,6 +24,7 @@ namespace DemoApp.Controllers
         public IActionResult Excel()
         {
             var fileData = _xLWorkbookProvider.GetFile("Demo01.xlsx");
+            _xLWorkbookProvider.SaveFile(fileData, "newData.xlsx");
             return Content(JsonConvert.SerializeObject(fileData.FileRowList));
         }
 

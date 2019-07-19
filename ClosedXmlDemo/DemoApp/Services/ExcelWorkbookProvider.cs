@@ -26,7 +26,9 @@ namespace DemoApp.Services
             var model = new FileHolder<XLWorkbook>(fileName, workbook);
 
             var capacity = worksheet.FirstColumnUsed().LastCellUsed().Address.RowNumber;
+
             capacity--;
+
             foreach (var column in worksheet.ColumnsUsed())
             {
                 var rowItem = new RowItem(capacity);
@@ -39,12 +41,35 @@ namespace DemoApp.Services
                 model.FileRowList.AddRow(rowItem);
             }
 
+
             return model;
         }
 
         public void SaveFile(IFileHolder<XLWorkbook> fileHolder, string newFileName)
         {
-            throw new NotImplementedException();
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Contacts");
+
+            var rowNum = 1;
+            foreach (var row in fileHolder.FileRowList.DataInFile)
+            {
+                var colNum = 1;
+                foreach (var column in row.Columns)
+                {
+                    ws.Cell(rowNum, colNum).Value = column.Value;
+
+                    ////
+                    colNum++;
+                }
+                rowNum++;
+            }
+
+            ws.Columns().AdjustToContents(); //ширина столбца по содержимому
+
+            // вернем пользователю файл без сохранения его на сервере
+            string xsltPath = Path.Combine(_hostingEnvironment.WebRootPath, "excel", newFileName);
+            wb.SaveAs(xsltPath);
+
         }
     }
 }
