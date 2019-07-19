@@ -1,26 +1,17 @@
-﻿using DemoApp.Models;
-using DemoApp.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using DemoAppCore3beta.Models;
 
-namespace DemoApp.Controllers
+namespace DemoAppCore3beta.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IXLWorkbookProvider _xLWorkbookProvider;
-
-        public HomeController(IXLWorkbookProvider xLWorkbookProvider)
-        {
-            _xLWorkbookProvider = xLWorkbookProvider;
-        }
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult Excel()
-        {
-            var fileData = _xLWorkbookProvider.GetFile("Demo01.xlsx");
             return View();
         }
 
